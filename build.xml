@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="SmokeTest.parent">
+	
+	<path id="my.cp">
+		<fileset dir="." casesensitive="yes">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="init">
+		<mkdir dir="target" />
+		<mkdir dir="target/classes" />
+	</target>
+	
+	<target name="clean" depends="init">
+		<delete>
+			<fileset dir="target">
+				<filename name="**/*.*" />
+			</fileset>
+		</delete>
+		<delete file="jars/att-smoke-test.jar" verbose="true" />
+	</target>
+    
+    <presetdef name="javac">
+        <javac includeantruntime="false" />
+    </presetdef>
+
+	<target name="build" depends="clean">
+		<javac srcdir="src" destdir="target/classes" fork="true" classpathref="my.cp" encoding="iso-8859-1" debug="true" />
+		<touch>
+			<fileset dir="custom/src" includes="**/*.java"/>
+		</touch>
+		<javac srcdir="custom/src" destdir="target/classes" fork="true" classpathref="my.cp" encoding="iso-8859-1" debug="true" />
+		<jar jarfile="target/att-smoke-test.jar" basedir="target/classes" />
+	</target>
+
+	<target name="deploy">
+		<copy todir="jars" verbose="true">
+			<fileset dir="target">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="Check">
+        <ant antfile="SmokeTest/HardRockSmokeTest/hr.build.xml" target="Check" inheritAll="false" />
+    </target>
+	
+	<target name="test.sales">
+		<ant antfile="SmokeTest/HomeSolutionSmokeTest/sales.build.xml" inheritAll="false" />
+    </target>
+	
+	<target name="test.mds">
+			<ant antfile="SmokeTest/MDSRegressionPOC/mds.build.xml" inheritAll="false" />
+	</target>
+	
+	<target name="test.hr">
+        <ant antfile="SmokeTest/HardRockSmokeTest/hr.build.xml" inheritAll="false" />
+	</target>
+    
+    <target name="test.accessoriesList">
+            <ant antfile="SmokeTest/AccessoriesListSmokeTest/accessoriesList.build.xml" inheritAll="false" />
+    </target>
+    
+    <target name="test.eap">
+            <ant antfile="SmokeTest/EasyActivationPortalSmokeTest/eap.build.xml" inheritAll="false" />
+    </target>
+    
+    <target name="prodtest.hr">
+                <ant antfile="SmokeTest/ProdHRSmokeTest/prodhr.build.xml" inheritAll="false" />
+    </target>
+    
+    <target name="prodtest.hs">
+                <ant antfile="SmokeTest/ProdHSSmokeTest/prodhs.build.xml" inheritAll="false" />
+    </target>
+    
+    <target name="test.oce">
+                 <ant antfile="SmokeTest/OCESmokeTest/oce.build.xml" inheritAll="false" />
+    </target>
+
+</project>
+
+
